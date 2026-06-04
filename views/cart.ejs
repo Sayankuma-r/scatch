@@ -1,0 +1,70 @@
+<%- include('./partials/header') %>
+<div class="w-full min-h-screen px-20 py-20">
+    <h1 class="text-4xl font-bold mb-8">Your Cart</h1>
+
+    <% if (!cartItems || cartItems.length === 0) { %>
+        <div class="bg-white rounded-3xl shadow p-10 text-center">
+            <h2 class="text-2xl font-semibold mb-4">Your cart is empty</h2>
+            <p class="text-gray-600 mb-6">Add products from the shop to see them here.</p>
+            <a href="/shop" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">Go to shop</a>
+        </div>
+    <% } else { %>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 bg-white rounded-3xl shadow p-6 space-y-6">
+                <h2 class="text-2xl font-semibold">Items in your cart</h2>
+
+                <% cartItems.forEach(function(item, index) { %>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-3xl border border-gray-200">
+                        <div class="w-full sm:w-32 h-32 rounded-3xl flex items-center justify-center" style="background-color:<%= item.bgcolor || '#f3f4f6' %>">
+                            <% if (item.image) { %>
+                                <img class="max-h-full max-w-full object-contain" src="data:image/jpeg;base64,<%= item.image.toString('base64') %>" alt="<%= item.name %>" />
+                            <% } else { %>
+                                <span class="text-gray-500">No image</span>
+                            <% } %>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold"><%= item.name %></h3>
+                            <p class="text-gray-600 mt-2">Price: ₹<%= item.price %></p>
+                            <p class="text-gray-600">Discount: ₹<%= item.discount %></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-semibold">₹<%= item.price - item.discount %></p>
+                            <span class="text-sm text-gray-500">Qty: 1</span>
+                        </div>
+                    </div>
+                    <% if (index < cartItems.length - 1) { %>
+                        <hr class="border-t border-gray-200" />
+                    <% } %>
+                <% }); %>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow p-6">
+                <h2 class="text-2xl font-semibold mb-6">Price Breakdown</h2>
+                <div class="space-y-4 text-gray-700">
+                    <div class="flex justify-between">
+                        <span>Items total</span>
+                        <span>₹<%= cartTotal %></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Discount</span>
+                        <span>- ₹<%= discountTotal %></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Platform fee</span>
+                        <span>₹<%= platformFee %></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Shipping</span>
+                        <span>FREE</span>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 mt-6 pt-6 flex justify-between items-center">
+                    <span class="text-xl font-semibold">Total Amount</span>
+                    <span class="text-2xl font-bold text-green-600">₹<%= bill %></span>
+                </div>
+                <a href="/shop" class="mt-8 inline-flex w-full justify-center items-center px-5 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">Continue shopping</a>
+            </div>
+        </div>
+    <% } %>
+</div>
+<%- include('./partials/footer') %>
