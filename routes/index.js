@@ -76,6 +76,33 @@ router.get("/addtocart/:productId", isLoggedIn, async (req, res) => {
 
 });
 
+// Remove From Cart
+
+router.post("/removefromcart/:productId", isLoggedIn, async (req, res) => {
+    try {
+        const user = await userModel.findOne({ email: req.user.email });
+
+        if (!user) {
+            req.flash("error", "User not found");
+            return res.redirect("/cart");
+        }
+
+        const itemIndex = user.cart.findIndex((item) => item.toString() === req.params.productId);
+        if (itemIndex === -1) {
+            req.flash("error", "Product is not in your bag");
+            return res.redirect("/cart");
+        }
+
+        user.cart.splice(itemIndex, 1);
+        await user.save();
+        res.redirect("/cart");
+    } catch (err) {
+        console.error("Unable to remove product from cart:", err);
+        req.flash("error", "Unable to update your bag");
+        res.redirect("/cart");
+    }
+});
+
 // Cart Page
 
 router.get("/cart", isLoggedIn, async (req, res) => {
@@ -102,7 +129,9 @@ router.get("/cart", isLoggedIn, async (req, res) => {
             cartTotal,
             discountTotal,
             platformFee,
-            bill
+            bill,
+            success: req.flash("success"),
+            error: req.flash("error")
         });
 
     } catch (err) {

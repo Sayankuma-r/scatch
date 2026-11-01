@@ -1,46 +1,54 @@
 <%- include('./partials/header.ejs') %>
 
-    <% if(error.length>0){ %>
-        <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500">
-            <span class="inline-block mt-1 mb-1 text-white">
-                <%= error %>
-            </span>
+<% const errors = Array.isArray(error) ? error : []; const successes = Array.isArray(success) ? success : []; %>
+<% if (errors.length) { %><div class="toast fixed left-1/2 top-24 z-50 -translate-x-1/2 rounded-full bg-red-500 px-5 py-3 text-sm font-medium text-white shadow-xl"><%= errors[0] %></div><% } %>
+<% if (successes.length) { %><div class="toast fixed left-1/2 top-24 z-50 -translate-x-1/2 rounded-full bg-[#171717] px-5 py-3 text-sm font-medium text-white shadow-xl"><%= successes[0] %></div><% } %>
+
+<main class="soft-grid">
+    <section class="mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 md:grid-cols-2 md:px-10 md:py-24">
+        <div>
+            <h1 class="max-w-xl text-5xl font-bold leading-[.98] tracking-[-.05em] md:text-7xl">Carry more.<br><span class="text-[#6f5cff]">Worry less.</span></h1>
+            <p class="mt-7 max-w-md text-lg leading-8 text-neutral-500">Bags with a point of view — made for commutes, quick getaways and every little plan in between.</p>
+            <div class="mt-9 flex flex-wrap gap-3">
+                <a href="/shop" class="btn-primary rounded-full px-6 py-3 font-semibold">Explore the collection <i class="ri-arrow-right-up-line ml-1"></i></a>
+                <a href="#register" class="rounded-full border border-black/15 px-6 py-3 font-semibold transition hover:bg-white">Join Scatch</a>
+            </div>
         </div>
-        <% } %>
-            <div class="w-full h-screen flex px-20">
-                <div class="w-1/2 flex items-center justify-center h-screen">
-                    <div class="w-full px-32">
-                        <h3 class="text-4xl">welcome to <span class="text-blue-400 font-semibold">Scatch</span></h3>
-                        <h4 class="text-2xl mb-5">create your account</h4>
-                        <form autocomplete="off" action="/users/register" method="post">
-                            <input
-                                class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="text" placeholder="Full Name" name="fullname">
-                            <input
-                                class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="email" placeholder="Email" name="email">
-                            <input
-                                class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="password" placeholder="Password" name="password">
-                            <input class="px-5 rounded-full py-3 mt-2 bg-blue-500 text-white" type="submit"
-                                value="Create My Account">
-                        </form>
-                    </div>
-                </div>
-                <div class="w-1/2 flex items-center justify-center h-screen">
-                    <div class="w-full px-32">
-                        <h4 class="text-2xl capitalize mb-5">login your account</h4>
-                        <form autocomplete="off" action="/users/login" method="post">
-                            <input
-                                class="block bg-zinc-100 w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="email" placeholder="Email" name="email">
-                            <input
-                                class="block bg-zinc-100 w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="password" placeholder="Password" name="password">
-                            <input class="px-5 block rounded-full py-3 mt-2 bg-blue-500 text-white" type="submit"
-                                value="Login">
-                        </form>
-                    </div>
+        <div class="relative mx-auto w-full max-w-lg">
+            <div class="absolute -left-5 top-10 h-24 w-24 rounded-full bg-[#d7f36b] blur-sm"></div>
+            <div class="absolute -right-4 bottom-8 h-32 w-32 rounded-full bg-[#bdb5ff]"></div>
+            <div class="relative overflow-hidden rounded-[2.5rem] border border-black/10 bg-[#e7e0d4] p-5 shadow-2xl">
+                <div class="flex h-[28rem] items-center justify-center rounded-[2rem] bg-[#eee8dc]">
+                    <img class="max-h-[25rem] w-full object-contain drop-shadow-2xl" src="/images/4bag.png" alt="Scatch leather backpack">
                 </div>
             </div>
-            <%- include('./partials/footer') %>
+        </div>
+    </section>
+
+    <section class="mx-auto grid max-w-7xl gap-5 px-5 pb-20 md:grid-cols-3 md:px-10">
+        <div class="rounded-3xl bg-[#171717] p-7 text-white"><i class="ri-leaf-line text-3xl text-[#d7f36b]"></i><h3 class="mt-8 text-xl font-bold">Thoughtful by design</h3><p class="mt-2 text-sm leading-6 text-white/60">Clean silhouettes, considered details and room for what matters.</p></div>
+        <div class="rounded-3xl bg-[#d7f36b] p-7"><i class="ri-shield-check-line text-3xl"></i><h3 class="mt-8 text-xl font-bold">Built for real life</h3><p class="mt-2 text-sm leading-6 text-black/60">Reliable materials and comfortable carry, from first coffee to last train.</p></div>
+        <div class="rounded-3xl bg-[#6f5cff] p-7 text-white"><i class="ri-sparkling-2-line text-3xl"></i><h3 class="mt-8 text-xl font-bold">Your kind of style</h3><p class="mt-2 text-sm leading-6 text-white/70">Find the colour and shape that feels unmistakably yours.</p></div>
+    </section>
+
+    <section class="mx-auto grid max-w-7xl gap-10 px-5 pb-24 md:grid-cols-2 md:px-10">
+        <div id="register" class="rounded-[2rem] bg-[#d7f36b] p-7 md:p-10">
+            <p class="text-xs font-bold uppercase tracking-[.2em]">Start here</p><h2 class="mt-4 text-3xl font-bold">Create your account</h2><p class="mt-2 text-sm text-black/60">Save your favourites and keep your everyday essentials close.</p>
+            <form class="mt-7 space-y-3" autocomplete="off" action="/users/register" method="post">
+                <input class="w-full rounded-xl border border-black/10 bg-white/70 px-4 py-3 outline-none placeholder:text-black/40 focus:border-black" type="text" placeholder="Full name" name="fullname" required>
+                <input class="w-full rounded-xl border border-black/10 bg-white/70 px-4 py-3 outline-none placeholder:text-black/40 focus:border-black" type="email" placeholder="Email address" name="email" required>
+                <input class="w-full rounded-xl border border-black/10 bg-white/70 px-4 py-3 outline-none placeholder:text-black/40 focus:border-black" type="password" placeholder="Password" name="password" required minlength="6">
+                <button class="btn-primary w-full rounded-xl px-5 py-3 font-semibold" type="submit">Create my account <i class="ri-arrow-right-line ml-1"></i></button>
+            </form>
+        </div>
+        <div id="login" class="rounded-[2rem] border border-black/10 bg-white p-7 md:p-10">
+            <p class="text-xs font-bold uppercase tracking-[.2em] text-[#6f5cff]">Welcome back</p><h2 class="mt-4 text-3xl font-bold">Sign in to Scatch</h2><p class="mt-2 text-sm text-neutral-500">Your bag rotation is waiting.</p>
+            <form class="mt-7 space-y-3" autocomplete="off" action="/users/login" method="post">
+                <input class="w-full rounded-xl border border-black/10 bg-[#f7f5f0] px-4 py-3 outline-none placeholder:text-black/40 focus:border-[#6f5cff]" type="email" placeholder="Email address" name="email" required>
+                <input class="w-full rounded-xl border border-black/10 bg-[#f7f5f0] px-4 py-3 outline-none placeholder:text-black/40 focus:border-[#6f5cff]" type="password" placeholder="Password" name="password" required>
+                <button class="btn-primary w-full rounded-xl px-5 py-3 font-semibold" type="submit">Sign in <i class="ri-arrow-right-line ml-1"></i></button>
+            </form>
+        </div>
+    </section>
+</main>
+<%- include('./partials/footer') %>

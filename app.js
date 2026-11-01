@@ -89,7 +89,16 @@ app.get("/owners/login", (req, res) => {
 });
 
 app.get("/admin", (req, res) => {
-    res.render("admin");
+    Product.find()
+        .then((products) => res.render("admin", {
+            products,
+            success: req.flash("success"),
+            error: req.flash("error")
+        }))
+        .catch((err) => {
+            console.error("Unable to load admin catalog:", err);
+            res.status(500).send("Error loading admin catalog");
+        });
 });
 
 app.get("/products/create", (req, res) => {

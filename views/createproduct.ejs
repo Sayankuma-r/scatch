@@ -1,131 +1,40 @@
 <%- include('./partials/header') %>
-
-            <% if(success.length>0){ %>
-            <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
-                <span class="inline-block mt-1 mb-1 text-white">
-                    <%= success %>
-                </span>
-            </div>
-            <% } %>
-
-            <div class="min-h-screen flex flex-col">
-                <div class="container px-10 py-20 flex flex-grow">
-                    <div class="w-[25%] flex h-screen flex-col items-start">
-                        <div class="flex flex-col">
-                            <a class="block w-fit mb-2" href="">All Products</a>
-                            <a class="block w-fit mb-2" href="">Create new product</a>
-                        </div>
-                    </div>
-                    <main class="w-3/4 bg-white p-8 shadow ml-4">
-                        <h2 class="text-xl font-bold mb-4">Create New Product</h2>
-                        <form autocomplete="off" action="/products/create" method="post" enctype="multipart/form-data">
-                            <div class="mb-6">
-                                <h3 class="text-lg font-semibold mb-2">Product Details</h3>
-                                <div class="mb-4">
-                                    <label class="block mb-2 font-medium">Product Image</label>
-                                    <input id="productImageInput" name="image" type="file" accept="image/*" class="py-2 px-4 rounded" value="Select File">
-                                    <div id="imagePreview" class="mt-4 hidden">
-                                        <p class="font-medium mb-2">Image Preview</p>
-                                        <img id="imagePreviewImg" class="w-full h-48 object-contain rounded-lg border" src="" alt="Preview">
-                                    </div>
-                                </div>
-
-                                <div class="mb-6">
-                                    <p class="font-medium mb-3">Or choose a design from the iBag gallery</p>
-                                    <div id="designList" class="grid grid-cols-3 gap-4">
-                                        <% if (typeof designImages !== 'undefined' && designImages.length) { %>
-                                            <% designImages.forEach(function(image) { %>
-                                            <button type="button" class="design-option border rounded-lg overflow-hidden hover:ring-2 hover:ring-blue-500 focus:outline-none" data-design-image="<%= image %>">
-                                                <img class="w-full h-28 object-cover" src="/images/<%= image %>" alt="<%= image %>">
-                                            </button>
-                                            <% }); %>
-                                        <% } else { %>
-                                            <div class="text-sm text-gray-500 col-span-3">No bag designs available yet.</div>
-                                        <% } %>
-                                    </div>
-                                    <input type="hidden" name="selectedDesign" id="selectedDesign" value="">
-                                    <p class="mt-2 text-sm text-gray-500">Select one of the available bag designs, or upload your own image above.</p>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input name="name" type="text" placeholder="Product Name"
-                                        class="border p-2 rounded w-full">
-                                    <input name="price" type="text" placeholder="Product Price"
-                                        class="border p-2 rounded w-full">
-                                    <input name="discount" type="text" placeholder="Discount Price"
-                                        class="border p-2 rounded w-full">
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 class="text-lg font-semibold mb-2">Panel Details</h3>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input name="bgcolor" type="text" placeholder="Background Color"
-                                        class="border p-2 rounded w-full">
-                                    <input name="panelcolor" type="text" placeholder="Panel Color"
-                                        class="border p-2 rounded w-full">
-                                    <input name="textcolor" type="text" placeholder="Text Color"
-                                        class="border p-2 rounded w-full">
-                                </div>
-                            </div>
-                            <input class="px-5 py-2 rounded mt-3 bg-blue-500 text-white" type="submit"
-                                value="Create New Product">
-                        </form>
-                    </main>
-                </div>
-            </div>
-            <script>
-                const productImageInput = document.getElementById('productImageInput');
-                const imagePreview = document.getElementById('imagePreview');
-                const imagePreviewImg = document.getElementById('imagePreviewImg');
-                const selectedDesignInput = document.getElementById('selectedDesign');
-                const designButtons = document.querySelectorAll('[data-design-image]');
-
-                function clearDesignSelection() {
-                    designButtons.forEach((button) => {
-                        button.classList.remove('ring-2', 'ring-blue-500');
-                    });
-                    if (selectedDesignInput) {
-                        selectedDesignInput.value = '';
-                    }
-                }
-
-                if (productImageInput) {
-                    productImageInput.addEventListener('change', function () {
-                        const file = this.files[0];
-                        clearDesignSelection();
-
-                        if (!file) {
-                            imagePreview.classList.add('hidden');
-                            imagePreviewImg.src = '';
-                            return;
-                        }
-
-                        const reader = new FileReader();
-                        reader.onload = function (event) {
-                            imagePreviewImg.src = event.target.result;
-                            imagePreview.classList.remove('hidden');
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                }
-
-                designButtons.forEach((button) => {
-                    button.addEventListener('click', function () {
-                        const fileName = this.getAttribute('data-design-image');
-                        if (selectedDesignInput) {
-                            selectedDesignInput.value = fileName;
-                        }
-
-                        if (productImageInput) {
-                            productImageInput.value = '';
-                        }
-
-                        clearDesignSelection();
-                        this.classList.add('ring-2', 'ring-blue-500');
-                        imagePreviewImg.src = '/images/' + fileName;
-                        imagePreview.classList.remove('hidden');
-                    });
-                });
-            </script>
-            <%- include('./partials/footer') %>
+<% const successMessages = typeof success !== 'undefined' && Array.isArray(success) ? success : []; %>
+<main class="mx-auto min-h-screen max-w-7xl px-5 py-10 md:px-10 md:py-16">
+    <div class="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+        <div><p class="text-xs font-bold uppercase tracking-[.2em] text-[#6f5cff]">Studio / inventory</p><h1 class="mt-3 text-4xl font-bold tracking-tight md:text-5xl">Create a new piece.</h1><p class="mt-3 max-w-lg text-neutral-500">Add a product to your Scatch collection with a clean image and a little personality.</p></div>
+        <a href="/shop" class="w-fit rounded-full border border-black/15 px-5 py-3 text-sm font-semibold transition hover:bg-white"><i class="ri-arrow-left-line mr-1"></i> View collection</a>
+    </div>
+    <% if (successMessages.length) { %><div class="mb-6 rounded-2xl bg-[#d7f36b] px-5 py-4 text-sm font-semibold"><%= successMessages[0] %></div><% } %>
+    <form class="grid gap-8 lg:grid-cols-[1.05fr_.95fr]" autocomplete="off" action="/products/create" method="post" enctype="multipart/form-data">
+        <section class="rounded-[2rem] border border-black/10 bg-white p-6 md:p-8">
+            <div class="mb-7 flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#6f5cff] text-sm font-bold text-white">01</span><div><h2 class="font-bold">Product details</h2><p class="text-sm text-neutral-500">The essentials shoppers need.</p></div></div>
+            <label class="mb-2 block text-sm font-semibold">Product name</label><input name="name" type="text" placeholder="e.g. Studio Tote" required class="mb-5 w-full rounded-xl border border-black/10 bg-[#f7f5f0] px-4 py-3 outline-none focus:border-[#6f5cff]">
+            <div class="grid gap-4 sm:grid-cols-2"><div><label class="mb-2 block text-sm font-semibold">Price</label><input name="price" type="number" min="0" placeholder="1999" required class="w-full rounded-xl border border-black/10 bg-[#f7f5f0] px-4 py-3 outline-none focus:border-[#6f5cff]"></div><div><label class="mb-2 block text-sm font-semibold">Discount</label><input name="discount" type="number" min="0" value="0" placeholder="0" class="w-full rounded-xl border border-black/10 bg-[#f7f5f0] px-4 py-3 outline-none focus:border-[#6f5cff]"></div></div>
+            <div class="mt-7 border-t border-black/10 pt-7"><div class="mb-4 flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#d7f36b] text-sm font-bold">02</span><div><h2 class="font-bold">Card styling</h2><p class="text-sm text-neutral-500">Give the product tile its own mood.</p></div></div><div class="grid gap-4 sm:grid-cols-3"><div><label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-neutral-500">Background</label><input name="bgcolor" type="text" value="#ebe7df" class="w-full rounded-xl border border-black/10 bg-[#f7f5f0] px-3 py-3 text-sm outline-none focus:border-[#6f5cff]"></div><div><label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-neutral-500">Panel</label><input name="panelcolor" type="text" value="#ffffff" class="w-full rounded-xl border border-black/10 bg-[#f7f5f0] px-3 py-3 text-sm outline-none focus:border-[#6f5cff]"></div><div><label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-neutral-500">Text</label><input name="textcolor" type="text" value="#171717" class="w-full rounded-xl border border-black/10 bg-[#f7f5f0] px-3 py-3 text-sm outline-none focus:border-[#6f5cff]"></div></div></div>
+        </section>
+        <section class="rounded-[2rem] bg-[#171717] p-6 text-white md:p-8"><div class="mb-7 flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#6f5cff] text-sm font-bold">03</span><div><h2 class="font-bold">Choose an image</h2><p class="text-sm text-white/55">Upload your own or pick from the gallery.</p></div></div>
+            <label for="productImageInput" class="group flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-white/20 px-5 py-8 text-center transition hover:border-[#d7f36b] hover:bg-white/5"><i class="ri-upload-cloud-2-line text-3xl text-[#d7f36b]"></i><span class="mt-3 font-semibold">Upload product image</span><span class="mt-1 text-xs text-white/45">PNG, JPG or WEBP</span><input id="productImageInput" name="image" type="file" accept="image/*" class="hidden"></label>
+            <div id="imagePreview" class="mt-5 hidden overflow-hidden rounded-2xl bg-white/10"><img id="imagePreviewImg" class="h-52 w-full object-contain" src="" alt="Preview"></div>
+            <p class="mb-3 mt-7 text-sm font-semibold">Or choose from the Scatch gallery</p><div class="grid grid-cols-3 gap-3"><% if (typeof designImages !== 'undefined' && designImages.length) { designImages.forEach(function(image) { %><button type="button" class="design-option overflow-hidden rounded-xl border border-white/10 transition hover:border-[#d7f36b]" data-design-image="<%= image %>"><img class="h-24 w-full object-cover" src="/images/<%= image %>" alt="<%= image %>"></button><% }); } else { %><p class="col-span-3 text-sm text-white/45">No gallery designs available.</p><% } %></div>
+            <input type="hidden" name="selectedDesign" id="selectedDesign" value=""><button class="btn-lime mt-8 w-full rounded-xl px-5 py-3 font-bold" type="submit">Publish product <i class="ri-arrow-right-up-line ml-1"></i></button>
+        </section>
+    </form>
+</main>
+<script>
+    const imageInput = document.getElementById('productImageInput');
+    const preview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('imagePreviewImg');
+    const selectedDesign = document.getElementById('selectedDesign');
+    const designButtons = document.querySelectorAll('[data-design-image]');
+    const clearDesign = () => designButtons.forEach((button) => button.classList.remove('border-[#d7f36b]', 'ring-2', 'ring-[#d7f36b]'));
+    imageInput.addEventListener('change', function () {
+        const file = this.files[0]; clearDesign(); selectedDesign.value = '';
+        if (!file) return preview.classList.add('hidden');
+        const reader = new FileReader(); reader.onload = (event) => { previewImage.src = event.target.result; preview.classList.remove('hidden'); }; reader.readAsDataURL(file);
+    });
+    designButtons.forEach((button) => button.addEventListener('click', function () {
+        const fileName = this.dataset.designImage; imageInput.value = ''; selectedDesign.value = fileName; clearDesign(); this.classList.add('border-[#d7f36b]', 'ring-2', 'ring-[#d7f36b]'); previewImage.src = '/images/' + encodeURIComponent(fileName); preview.classList.remove('hidden');
+    }));
+</script>
+<%- include('./partials/footer') %>

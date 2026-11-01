@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs/promises");
 const path = require("path");
+const mongoose = require("mongoose");
 
 const Product = require("../models/product-model");
+const userModel = require("../models/user-model");
 const upload = require("../config/multer-config");
 
 // GET ALL PRODUCTS
@@ -19,6 +21,35 @@ router.get("/", async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send("Error fetching products");
+    }
+});
+
+// DELETE PRODUCT
+
+router.post("/:productId/delete", async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.productId)) {
+            req.flash("error", "Invalid product");
+            return res.redirect("/admin");
+        }
+
+        const deletedProduct = await Product.findByIdAndDelete(req.params.productId);
+        if (!deletedProduct) {
+            req.flash("error", "Product not found");
+            return res.redirect("/admin");
+        }
+
+        await userModel.updateMany(
+            { cart: deletedProduct._id },
+            { $pull: { cart: deletedProduct._id } }
+        );
+
+        req.flash("success", "Product deleted successfully");
+        res.redirect("/admin");
+    } catch (err) {
+        console.error("Unable to delete product:", err);
+        req.flash("error", "Unable to delete product");
+        res.redirect("/admin");
     }
 });
 

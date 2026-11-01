@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const ownerModel = require("../models/owner-model");
+const Product = require("../models/product-model");
 
 if (process.env.NODE_ENV === "development") {
 
@@ -29,11 +30,18 @@ if (process.env.NODE_ENV === "development") {
 
 }
 
-router.get("/admin", function (req, res) {
-  let success = req.flash("success");
-  let error = req.flash("error");
-
-  res.render("createproduct", { success, error });
+router.get("/admin", async function (req, res) {
+  try {
+    const products = await Product.find();
+    res.render("admin", {
+      products,
+      success: req.flash("success"),
+      error: req.flash("error")
+    });
+  } catch (err) {
+    console.error("Unable to load owner catalog:", err);
+    res.status(500).send("Error loading owner catalog");
+  }
 });
 
 module.exports = router;

@@ -5,26 +5,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Scatch — carry your everyday</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 
-<body class="font-['helvetica_now_display']">
-    <nav class="w-full flex justify-between px-5 py-3">
-        <h3 class="text-xl">Scatch</h3>
+<body>
+    <nav class="sticky top-0 z-40 border-b border-black/10 bg-[#f7f5f0]/90 px-5 py-4 backdrop-blur md:px-10">
+        <div class="mx-auto flex max-w-7xl items-center justify-between">
+        <a href="/" class="brand text-2xl font-bold tracking-tight">scatch<span class="text-[#6f5cff]">.</span></a>
         <% var loggedin = typeof loggedin != "undefined" ? loggedin : false %>
         <% if (loggedin) { %>
-            <div class="flex gap-5">
-                <a href="/shop">Shop</a>
-                <a href="/cart">Cart</a>
-                <a href="/account">My account</a>
-                <a class="text-red-600" href="/users/logout">Logout</a>
+            <div class="flex items-center gap-3 text-sm font-medium md:gap-7">
+                <a class="hidden transition hover:text-[#6f5cff] sm:block" href="/shop">Shop</a>
+                <a class="hidden transition hover:text-[#6f5cff] sm:block" href="/account">Account</a>
+                <a class="relative rounded-full border border-black/10 p-2 transition hover:bg-white" href="/cart" aria-label="Shopping cart">
+                    <i class="ri-shopping-bag-3-line text-lg"></i>
+                </a>
+                <a class="rounded-full bg-black px-4 py-2 text-white transition hover:bg-[#6f5cff]" href="/users/logout">Log out</a>
             </div>
         <% } else { %>
-            <div class="flex gap-5">
-                <a href="/">Login</a>
+            <div class="flex items-center gap-4 text-sm font-medium">
+                <a class="hidden sm:block" href="#login">Sign in</a>
+                <a class="rounded-full bg-black px-4 py-2 text-white transition hover:bg-[#6f5cff]" href="#register">Get started</a>
             </div>
         <% } %>
-        
+        </div>
     </nav>
