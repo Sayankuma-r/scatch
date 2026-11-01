@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 const config = require("config");
 const dbgr = require("debug")("development:mongoose");
 
-mongoose.connect(`${config.get("MONGODB_URI")}/scatch`)
+const mongoUri = process.env.MONGODB_URI || `${config.get("MONGODB_URI")}/scatch`;
+
+mongoose.connect(mongoUri)
 .then(function () {
     dbgr("connected");
 })

@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs/promises");
+const path = require("path");
 
 const Product = require("../models/product-model");
 const upload = require("../config/multer-config");
@@ -34,8 +36,23 @@ router.post("/create", upload.single("image"), async (req, res) => {
             textcolor
         } = req.body;
 
+        let image = req.file ? req.file.buffer : null;
+        if (!image && req.body.selectedDesign) {
+            const imageName = path.basename(req.body.selectedDesign);
+            const imagePath = path.join(__dirname, "..", "public", "images", imageName);
+            const imageDirectory = path.dirname(imagePath);
+            const allowedImages = await fs.readdir(imageDirectory);
+
+            if (!allowedImages.includes(imageName)) {
+                req.flash("error", "Selected design was not found");
+                return res.redirect("/products/create");
+            }
+
+            image = await fs.readFile(imagePath);
+        }
+
         await Product.create({
-            image: req.file ? req.file.buffer : null,
+            image,
             name,
             price,
             discount,

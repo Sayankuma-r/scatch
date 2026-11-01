@@ -1,10 +1,12 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const db = require("./config/mongoose-connection");
+require("./config/mongoose-connection");
 const userModel = require("./models/user-model");
 
 
@@ -19,13 +21,11 @@ const { isLoggedIn } = require("./middlewares/isLoggedin");
 const flash = require("connect-flash");
 const session = require("express-session");
 
-require("dotenv").config();
-
 // Middleware
 
 app.use(
     session({
-        secret: process.env.EXPRESS_SESSION_SECRET,
+        secret: process.env.EXPRESS_SESSION_SECRET || "scatch-development-session-secret",
         resave: false,
         saveUninitialized: false
     })
@@ -108,6 +108,11 @@ app.get("/products/create", (req, res) => {
 });
 
 // Server
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
-});
+if (require.main === module) {
+    const port = Number(process.env.PORT) || 3000;
+    app.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+    });
+}
+
+module.exports = app;

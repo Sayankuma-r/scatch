@@ -16,6 +16,11 @@ module.exports.isLoggedIn = async function(req, res, next) {
 
         let user = await userModel.findOne({ email: data.email }).select("-password");
 
+        if (!user) {
+            req.flash("error", "User not found");
+            return res.redirect("/");
+        }
+
         req.user = user;
 
         next();
